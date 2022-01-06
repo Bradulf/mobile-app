@@ -12,7 +12,7 @@ public class UserEntity implements Serializable {
 
     private static final long serialVersionUID = 5313493413859894403L;
 
-    //private key inserted into database table
+    //primary key inserted into database table
     @Id
     @GeneratedValue
     private long id;

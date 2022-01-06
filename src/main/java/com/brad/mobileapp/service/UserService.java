@@ -1,5 +1,6 @@
 package com.brad.mobileapp.service;
 
+import com.brad.mobileapp.repository.UserRepository;
 import com.brad.mobileapp.shared.dto.UserDto;
 import org.springframework.stereotype.Service;
 
@@ -7,4 +8,6 @@ import org.springframework.stereotype.Service;
 public interface UserService {
     //
     UserDto createUser(UserDto user);
+
+
 }
