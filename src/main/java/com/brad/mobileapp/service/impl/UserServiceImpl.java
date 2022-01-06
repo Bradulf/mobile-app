@@ -7,6 +7,9 @@ import com.brad.mobileapp.shared.Utils;
 import com.brad.mobileapp.shared.dto.UserDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,6 +20,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     Utils utils;
+
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public UserDto createUser(UserDto user) {
@@ -30,15 +36,20 @@ public class UserServiceImpl implements UserService {
         //using the method to iterate 30 times
         String publicUserId = utils.generateUserId(30); //now something like mobile can use the public user id to get the details of a record
 
-        //required fields that come from entity that we dont get from json payload
-        userEntity.setEncryptedPassword(publicUserId);
+        //required fields that come from entity that we dont get from json payload //this will get the password from the user
+        userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         //this record will be used to identify and find records in database
-        userEntity.setUserId("testUserId");
+        userEntity.setUserId(publicUserId);
         UserEntity storedUserDetails = userRepository.save(userEntity);
 
         UserDto returnValue = new UserDto();
 
         BeanUtils.copyProperties(storedUserDetails, returnValue);
         return returnValue;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return null;
     }
 }
